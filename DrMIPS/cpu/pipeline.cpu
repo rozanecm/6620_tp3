@@ -10,7 +10,7 @@
 		
 		"IF/ID":      {"type": "PipelineRegister", "x": 180, "y": 110, "write": "Write", "flush": "Flush", "regs": {"NewPC": 32, "Instruction": 32}},
 		
-		"DistInst":   {"type": "Distributor", "x": 200, "y": 250, "in": {"id": "Instruction", "size": 32}, "out": [{"msb": 31, "lsb": 26}, {"msb": 25, "lsb": 21}, {"msb": 20, "lsb": 16},   {"msb": 15, "lsb": 11}, {"msb": 15, "lsb": 0}, {"msb": 10, "lsb": 6}, {"msb": 31, "lsb": 31}, {"msb": 30, "lsb": 30}, {"msb": 29, "lsb": 29}, {"msb": 27, "lsb": 27}, {"msb": 26, "lsb": 26}, {"msb": 3, "lsb": 3}, {"msb": 4, "lsb": 4}, {"msb": 5, "lsb": 5}]},
+		"DistInst":   {"type": "Distributor", "x": 200, "y": 250, "in": {"id": "Instruction", "size": 32}, "out": [{"msb": 31, "lsb": 26}, {"msb": 25, "lsb": 21}, {"msb": 20, "lsb": 16},   {"msb": 15, "lsb": 11}, {"msb": 15, "lsb": 0}, {"msb": 10, "lsb": 6}, {"msb": 31, "lsb": 31}, {"msb": 29, "lsb": 29}, {"msb": 28, "lsb": 28}, {"msb": 27, "lsb": 27}, {"msb": 26, "lsb": 26}, {"msb": 3, "lsb": 3}, {"msb": 4, "lsb": 4}, {"msb": 5, "lsb": 5}]},
 		"ForkRt":     {"type": "Fork", "x": 220, "y": 265, "size": 5, "in": "In", "out": ["Out1", "Out2"]},
 		"RegBank":    {"type": "RegBank", "latency": 100, "x": 260, "y": 215, "num_regs": 32, "read_reg1": "ReadReg1", "read_reg2": "ReadReg2", "read_data1": "ReadData1", "read_data2": "ReadData2", "write_reg": "WriteReg", "write_data": "WriteData", "reg_write": "RegWrite", "forwarding": true, "const_regs": [{"reg": 0, "val": 0}], "desc": {"default": "Holds all the MIPS registers and provides read/write to them.\nThe values of the ReadReg1 and ReadReg2 registers are read to the outputs.\nWriteData is written to the WriteReg register at the clock transition if RegWrite is enabled.\nWhen the same register is read from and written to in the same clock cycle, this register bank also forwards the written value to the output.", "pt": "Contém todos os registos do MIPS e fornece acesso de leitura/escrita aos mesmos.\nOs valores dos registos ReadReg1 e ReadReg2 são lidos para as saídas.\nWriteData é escrito para o registo WriteReg na transição do relógio se RegWrite estiver activo.\nQuando o mesmo registo é lido e escrito no mesmo ciclo de relógio, este banco de registos também encaminha o valor escrito para a saída."}},
 		"Control":    {"type": "ControlUnit", "latency": 50, "x": 230, "y": 70, "in": "Opcode"},
@@ -19,14 +19,14 @@
         "3or4":       {"type": "Or", "x": 290, "y": 405, "in1": "In1", "in2": "In2", "out": "Out"},
         "3or4or5":    {"type": "Or", "x": 325, "y": 405, "in1": "In1", "in2": "In2", "out": "Out"},
         
-        "Not3or4or5or26or27or29or30or31": {"type": "Not", "x": 360, "y": 405, "in": "In", "out": "Out"},
+        "Not3or4or5or26or27or28or29or31": {"type": "Not", "x": 360, "y": 405, "in": "In", "out": "Out"},
 
         "26or27":     {"type": "Or", "x": 220, "y": 490, "in1": "In1", "in2": "In2", "out": "Out"},
         "26or27or29": {"type": "Or", "x": 255, "y": 490, "in1": "In1", "in2": "In2", "out": "Out"},
-        "26or27or29or30":     {"type": "Or", "x": 290, "y": 490, "in1": "In1", "in2": "In2", "out": "Out"},
-        "26or27or29or30or31":     {"type": "Or", "x": 325, "y": 490, "in1": "In1", "in2": "In2", "out": "Out"},
+        "26or27or28or29":     {"type": "Or", "x": 290, "y": 490, "in1": "In1", "in2": "In2", "out": "Out"},
+        "26or27or28or29or31":     {"type": "Or", "x": 325, "y": 490, "in1": "In1", "in2": "In2", "out": "Out"},
         
-        "OR3,4,5,26,27,29,30,31": {"type": "Or", "x": 360, "y": 440, "in1": "In1", "in2": "In2", "out": "Out"},
+        "OR3,4,5,26,27,28,29,31": {"type": "Or", "x": 360, "y": 440, "in1": "In1", "in2": "In2", "out": "Out"},
 
 		"ForkRs":     {"type": "Fork", "x": 230, "y": 235, "size": 5, "in": "In", "out": ["Out1", "Out2"]},
 		"HazardUnit": {"type": "HazardDetectionUnit", "latency": 50, "x": 230, "y": 10, "id_ex_mem_read": "ID/EX.MemRead", "id_ex_rt": "ID/EX.Rt", "if_id_rs": "IF/ID.Rs", "if_id_rt": "IF/ID.Rt", "stall": "Stall"},
@@ -107,28 +107,30 @@
 		{"from": "DistInst",        "out": "10-6",          "to": "ID/EX", "in": "Shamt"},
 		
 		
-		{"from": "DistInst",        "out": "3-3",           "to": "3or4", "in": "In1"},
-		{"from": "DistInst",        "out": "4-4",           "to": "3or4", "in": "In2"},
-		{"from": "3or4",            "out": "Out",           "to": "3or4or5", "in": "In1"},
-		{"from": "DistInst",        "out": "5-5",           "to": "3or4or5", "in": "In2"},
-		{"from": "3or4or5",         "out": "Out",           "to": "OR3,4,5,26,27,29,30,31", "in": "In1"},
-		{"from": "Not3or4or5or26or27or29or30or31",      "out": "Out",           "to": "ID/EX", "in": "ShamtSelect"},
+		{"from": "DistInst",        "out": "3-3",           "to": "3or4", "in": "In1", "points": [{"x": 230, "y": 415}]},
+		{"from": "DistInst",        "out": "4-4",           "to": "3or4", "in": "In2", "points": [{"x": 230, "y": 425}]},
+		
+		{"from": "3or4",            "out": "Out",           "to": "3or4or5", "in": "In2"},
+		{"from": "DistInst",        "out": "5-5",           "to": "3or4or5", "in": "In1", "points": [{"x": 230, "y": 400}, {"x": 320, "y": 400}]},
+		
+		{"from": "3or4or5",         "out": "Out",           "to": "OR3,4,5,26,27,28,29,31", "in": "In1", "points": [{"x": 358, "y": 450}]},
+		{"from": "Not3or4or5or26or27or28or29or31","out": "Out",           "to": "ID/EX", "in": "ShamtSelect"},
 		
 		
-		{"from": "DistInst",        "out": "26-26",         "to": "26or27", "in": "In1"},
-		{"from": "DistInst",        "out": "27-27",         "to": "26or27", "in": "In2"},
+		{"from": "DistInst",        "out": "26-26",         "to": "26or27", "in": "In1", "points": [{"x": 205, "y": 500}]},
+		{"from": "DistInst",        "out": "27-27",         "to": "26or27", "in": "In2", "points": [{"x": 210, "y": 300}, {"x": 210, "y": 510}]},
 		
-		{"from": "26or27",          "out": "Out",           "to": "26or27or29", "in": "In1"},
-		{"from": "DistInst",        "out": "29-29",         "to": "26or27or29", "in": "In2"},
+		{"from": "26or27",          "out": "Out",           "to": "26or27or29", "in": "In2"},
+		{"from": "DistInst",        "out": "29-29",         "to": "26or27or29", "in": "In1", "points": [{"x": 215, "y": 485}, {"x": 250, "y": 485}]},
 		
-		{"from": "26or27or29",      "out": "Out",           "to": "26or27or29or30", "in": "In1"},
-		{"from": "DistInst",        "out": "30-30",         "to": "26or27or29or30", "in": "In2"},
+		{"from": "26or27or29",      "out": "Out",           "to": "26or27or28or29", "in": "In2"},
+		{"from": "DistInst",        "out": "28-28",         "to": "26or27or28or29", "in": "In1", "points": [{"x": 220, "y": 482}, {"x": 285, "y": 482}]},
 		
-		{"from": "26or27or29or30",  "out": "Out",           "to": "26or27or29or30or31", "in": "In1"},
-		{"from": "DistInst",        "out": "31-31",         "to": "26or27or29or30or31", "in": "In2"},
+		{"from": "26or27or28or29",  "out": "Out",           "to": "26or27or28or29or31", "in": "In2"},
+		{"from": "DistInst",        "out": "31-31",         "to": "26or27or28or29or31", "in": "In1", "points": [{"x": 225, "y": 475}, {"x": 320,"y": 475}]},
 		
-		{"from": "26or27or29or30or31","out": "Out",         "to": "OR3,4,5,26,27,29,30,31", "in": "In2"},
-		{"from": "OR3,4,5,26,27,29,30,31","out": "Out",     "to": "Not3or4or5or26or27or29or30or31", "in": "In"},
+		{"from": "26or27or28or29or31","out": "Out",         "to": "OR3,4,5,26,27,28,29,31", "in": "In2"},
+		{"from": "OR3,4,5,26,27,28,29,31","out": "Out",     "to": "Not3or4or5or26or27or28or29or31", "in": "In"},
 		
 		
 		{"from": "RegBank",         "out": "ReadData1",     "to": "ID/EX", "in": "ReadData1", "end": {"x": 390, "y": 248}},
