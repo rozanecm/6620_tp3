@@ -1,0 +1,5 @@
+DrMIPS/.idea/
+DrMIPS/CMakeLists.txt
+DrMIPS/cmake-build-debug/
+DrMIPS/cpu/pipeline (copy).cpu
+notes
