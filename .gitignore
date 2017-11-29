@@ -3,3 +3,8 @@ DrMIPS/CMakeLists.txt
 DrMIPS/cmake-build-debug/
 DrMIPS/cpu/pipeline (copy).cpu
 notes
+DrMIPS/cpu/01 and 02/pipeline (copy).cpu
+DrMIPS/cpu/03/deleted ors
+DrMIPS/cpu/03/old pipeline.cpu
+DrMIPS/cpu/03/pipeline (copy).cpu
+
