@@ -64,6 +64,13 @@
 		"ALU":        {"type": "ALU", "latency": 100, "x": 480, "y": 237, "in1": "In1", "in2": "In2", "control": "Operation", "out": "Result", "zero": "Zero"},
 		"MuxDst":     {"type": "Multiplexer", "latency": 15, "x": 526, "y": 370, "size": 5, "sel": "RegDst", "in": ["0", "1"], "out": "Out", "desc": {"default": "Selects the instruction's rt or rd field as the destination register (WriteReg).", "pt": "Selecciona o campo rt ou rd da instrução como registo de destino (WriteReg)."}},
 		"ShiftImm":   {"type": "ShiftLeft", "x": 465, "y": 190, "in": {"id": "In", "size": 32}, "out": {"id": "Out", "size": 32}, "amount": 2, "desc": {"default": "The 2 less significant bits of the addresses of the instructions are always 00 (the addresses are multiples of 4). As such, these bits are not included in the instruction's immediate value (offset).\nThis component restores those bits by shifting the value 2 bits to the left (or multiplying by 4), in case it is a branch instruction.", "pt": "Os 2 bits menos significativos dos endereços das instruções são sempre 00 (os endereços são múltiplos de 4). Como tal, estes bits não são incluídos no valor imediato da instrução (offset).\nEste componente restaura esses bits deslocando o valor 2 bits para a esquerda (ou multiplicando por 4), no caso de ser uma instrução de branch."}},
+		
+		
+		
+		"ForkNewPC":     {"type": "Fork", "x": 430, "y": 175, "size": 32, "in": "In", "out": ["Out1", "Out2"]},
+		
+		
+		
 		"AddBranch":  {"type": "Add", "latency": 50, "x": 510, "y": 164, "in1": "In1", "in2": "In2", "out": "Out", "desc": {"default": "Adds the branch offset to the PC+4 to obtain the destination branch address, in case it is a branch instruction.", "pt": "Soma o offset do branch ao PC+4 para obter o endereço de destino do branch, no caso de ser uma instrução de branch."}},
 		"ForkImm":    {"type": "Fork", "x": 450, "y": 292, "size": 32, "in": "In", "out": ["Out1", "Out2"]},
 		"ForkRt2":    {"type": "Fork", "x": 408, "y": 381, "size": 5, "in": "In", "out": ["Out1", "Out2", "Out3"]},
@@ -215,7 +222,12 @@
 		{"from": "ID/EX",           "out": "Rd",                "to": "MuxDst", "in": "1", "start": {"x": 405, "y": 392}},
 		{"from": "ID/EX",           "out": "RegDst",            "to": "MuxDst", "in": "RegDst", "start": {"x": 405, "y": 150}, "points": [{"x": 547, "y": 150}, {"x": 547, "y": 365}, {"x": 533, "y": 365}]},
 		{"from": "MuxDst",          "out": "Out",               "to": "EX/MEM", "in": "RegBankDst", "end": {"x": 550, "y": 387}},
-		{"from": "ID/EX",           "out": "NewPC",             "to": "AddBranch", "in": "In1", "start": {"x": 405, "y": 175}},
+		
+		
+		{"from": "ID/EX",           "out": "NewPC",             "to": "ForkNewPC", "in": "In", "start": {"x": 405, "y": 175}},
+		{"from": "ForkNewPC",       "out": "Out1",              "to": "AddBranch", "in": "In1"},
+		
+		
 		{"from": "DistImm",         "out": "31-0",              "to": "ForkImm", "in": "In", "start": {"x": 450, "y": 330}},
 		{"from": "ForkImm",         "out": "Out1",              "to": "MuxReg", "in": "1"},
 		{"from": "ForkImm",         "out": "Out2",              "to": "ShiftImm", "in": "In", "points": [{"x": 450, "y": 210}]},
