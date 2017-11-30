@@ -194,9 +194,18 @@ Para agregar esta pseudo instrucción, se debió agregar la siguiente línea.
 \end{lstlisting}
 
 \subsubsection{Instrucción \texttt{jalr} en el datapath \texttt{pipeline.cpu}}
-En este caso se vuelve a tratar de una pseud instrucción. Ésta es compuesta por las operaciones \texttt{addi} y \texttt{jr}, ésta última implementada anteriormente.\\
-Para agregar la pseudo instrucción, hubo que agregar la siguiente línea en la sección de pseudo instrucciones:
+Formato de la instrucci\'on:\\
+\texttt{JALR rs} (\texttt{rd} = 31 implied)\\
+\texttt{JALR rd, rs}\\
+Descripci\'on:\\
+$rd \leftarrow return\_addr, PC \leftarrow rs$\\
+En este caso se vuelve a tratar de una pseudo instrucción. Ésta es compuesta por las operaciones \texttt{addi} y \texttt{jr}, ésta última implementada anteriormente.\\
+La instrucci\'on completa es: \texttt{jalr rd, rs}. En caso de omitir el campo \texttt{rd}, se tomar\'a su valor como igual a 31. Como ac\'a hay dos casos posibles, hubo que agregar dos l\'ineas en el apartado de pseudo instrucciones en el archivo .set. 
 \begin{lstlisting}[breaklines=true]
+"jalr": {"args": ["reg", "reg"], "to": ["addi #1, $0, $ra", "jr #2"]},
+
+
+"jalr": {"args": ["reg"], "to": ["addi 31, $0, $ra", "jr #1"]}
 \end{lstlisting}
 
 
@@ -221,6 +230,7 @@ Como se mencionó anteriormente, esta instrucción ya estaba incluída, por lo q
 En este caso hubo que considerar una entrada alternativa al Program Counter, por lo que se agregó un multiplexor que recibía por una entrada lo que hasta ahora recibía el Program Counter, y por la otra el valor del registro que contiene la direcci\'on a la que nos interesa ir. La salida de este multiplexor va a la entrada del Program Counter. Mediante el uso de compuertas \texttt{or} y \texttt{not}, estudiando el c\'odigo de operaci\'on correspondiente a esta instrucci\'on, se implement\'o el selector de este nuevo multiplexor. 
 
 \subsubsection{Instrucción \texttt{jalr} en el datapath \texttt{pipeline.cpu}}
+Al agregase como una pseudo Instrucci\'on, no hubo que realizar modificaciones en el datapath. 
 
 \newpage
 
